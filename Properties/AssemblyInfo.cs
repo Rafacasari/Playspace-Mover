@@ -1,36 +1,15 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using MelonLoader;
+using Playerspace_Mover;
 
-// As informações gerais sobre um assembly são controladas por
-// conjunto de atributos. Altere estes valores de atributo para modificar as informações
-// associada a um assembly.
-[assembly: AssemblyTitle("Playerspace Mover")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Playerspace Mover")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle(ModInfo.Description)]
+[assembly: AssemblyDescription(ModInfo.Description)]
+[assembly: AssemblyCompany(ModInfo.Company)]
+[assembly: AssemblyProduct(ModInfo.Name)]
+[assembly: AssemblyCopyright("Created by " + ModInfo.Author)]
+[assembly: AssemblyTrademark(ModInfo.Company)]
+[assembly: AssemblyVersion(ModInfo.Version)]
+[assembly: AssemblyFileVersion(ModInfo.Version)]
+[assembly: MelonInfo(typeof(PlayerspaceMover), ModInfo.Name, ModInfo.Version, ModInfo.Author, ModInfo.DownloadLink)]
 
-// Definir ComVisible como false torna os tipos neste assembly invisíveis
-// para componentes COM. Caso precise acessar um tipo neste assembly de
-// COM, defina o atributo ComVisible como true nesse tipo.
-[assembly: ComVisible(false)]
-
-// O GUID a seguir será destinado à ID de typelib se este projeto for exposto para COM
-[assembly: Guid("23cf827e-3738-42e7-aaef-225cb734a7a8")]
-
-// As informações da versão de um assembly consistem nos quatro valores a seguir:
-//
-//      Versão Principal
-//      Versão Secundária 
-//      Número da Versão
-//      Revisão
-//
-// É possível especificar todos os valores ou usar como padrão os Números de Build e da Revisão
-// usando o "*" como mostrado abaixo:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: MelonGame("VRChat", "VRChat")]

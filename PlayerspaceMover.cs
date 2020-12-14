@@ -36,12 +36,12 @@ namespace Playerspace_Mover
                 StartPosition = Camera.cameraLiftTransform.localPosition;
                 yield break;
             }
-             
+
             MelonLogger.LogError("VRCVrCameraOculus has not found, this mod only work in Oculus for now!");
             yield break;
         }
 
-        
+
         public override void OnUpdate()
         {
             if (Camera == null) return;

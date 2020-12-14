@@ -1,7 +1,9 @@
-﻿using MelonLoader;
+﻿#region Usings
+using MelonLoader;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#endregion
 
 namespace Playerspace_Mover
 {
@@ -11,7 +13,7 @@ namespace Playerspace_Mover
         public const string Description = "A SteamVR Playerspace clone for Oculus Users";
         public const string Author = "Rafa";
         public const string Company = "RBX";
-        public const string Version = "1.0.0";
+        public const string Version = "1.0.1";
         public const string DownloadLink = null;
     }
 
@@ -26,7 +28,6 @@ namespace Playerspace_Mover
 
         private IEnumerator WaitInitialization()
         {
-            
             while (VRCUiManager.prop_VRCUiManager_0 == null) yield return new WaitForFixedUpdate();
             var objects = UnityEngine.Object.FindObjectsOfType<VRCVrCameraOculus>();
             if (objects != null && objects.Length > 0)
@@ -51,8 +52,8 @@ namespace Playerspace_Mover
                 return;
             }
 
-            isLeftPressed = OVRInput.GetDown(OVRInput.Button.Three);
-            isRightPressed = OVRInput.GetDown(OVRInput.Button.One);
+            isLeftPressed = IsKeyJustPressed(OVRInput.Button.Three);
+            isRightPressed = IsKeyJustPressed(OVRInput.Button.One);
 
             if (isLeftPressed || isRightPressed) startingOffset = OVRInput.GetLocalControllerPosition(isLeftPressed ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch);
 
@@ -70,21 +71,28 @@ namespace Playerspace_Mover
 
             if (rightTrigger)
             {
-
                 Vector3 currentOffset = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
                 Vector3 calculatedOffset = (currentOffset - startingOffset) * -1.0f;
                 startingOffset = currentOffset;
                 Camera.cameraLiftTransform.localPosition += calculatedOffset;
             }
+        }
 
+        private static Dictionary<OVRInput.Button, bool> PreviousStates = new Dictionary<OVRInput.Button, bool>()
+        {
+            { OVRInput.Button.Three, false }, { OVRInput.Button.One, false }
+        };
 
-            base.OnUpdate();
+        private static bool IsKeyJustPressed(OVRInput.Button key)
+        {
+            if (!PreviousStates.ContainsKey(key)) PreviousStates.Add(key, false);
+
+            if (OVRInput.Get(key, OVRInput.Controller.Touch) && !PreviousStates[key]) return PreviousStates[key] = true;
+            else return PreviousStates[key] = false;
         }
 
         private readonly float DoubleClickTime = 0.25f;
         private static Dictionary<OVRInput.Button, float> lastTime = new Dictionary<OVRInput.Button, float>();
-        
-
 
         // Thanks to Psychloor!
         // https://github.com/Psychloor/DoubleTapRunner/blob/master/DoubleTapSpeed/Utilities.cs#L30

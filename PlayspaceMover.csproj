@@ -7,8 +7,8 @@
     <ProjectGuid>{23CF827E-3738-42E7-AAEF-225CB734A7A8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playerspace_Mover</RootNamespace>
-    <AssemblyName>Playerspace Mover</AssemblyName>
+    <RootNamespace>PlayspaceMover</RootNamespace>
+    <AssemblyName>PlayspaceMover</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -65,7 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PlayerspaceMover.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

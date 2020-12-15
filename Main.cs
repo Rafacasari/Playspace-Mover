@@ -5,21 +5,46 @@ using System.Collections.Generic;
 using UnityEngine;
 #endregion
 
-namespace Playerspace_Mover
+namespace PlayspaceMover
 {
     public static class ModInfo
     {
-        public const string Name = "PlayerspaceMover";
-        public const string Description = "A SteamVR Playerspace clone for Oculus Users";
+        public const string Name = "PlayspaceMover";
+        public const string Description = "A SteamVR's Playspace clone for Oculus Users";
         public const string Author = "Rafa";
         public const string Company = "RBX";
-        public const string Version = "1.0.1";
+        public const string Version = "1.1.0";
         public const string DownloadLink = null;
     }
 
-    public class PlayerspaceMover : MelonMod
+    public class Main : MelonMod
     {
-        public override void OnApplicationStart() => MelonCoroutines.Start(WaitInitialization());
+        #region Settings
+        private bool Enabled = true;
+        private float Strength = 1f;
+        private float DoubleClickTime = 0.25f;
+        #endregion
+
+        private readonly string Category = "PlayspaceMover";
+        public override void OnApplicationStart()
+        {
+            MelonPrefs.RegisterCategory(Category, "Playspace Mover");
+            MelonPrefs.RegisterBool(Category, nameof(Enabled), Enabled, "Enabled");
+            MelonPrefs.RegisterFloat(Category, nameof(Strength), Strength, "Strength");
+            MelonPrefs.RegisterFloat(Category, nameof(DoubleClickTime), DoubleClickTime, "Double Click Time");
+            ApplySettings();
+
+            MelonCoroutines.Start(WaitInitialization());
+        }
+
+        private void ApplySettings()
+        {
+            Enabled = MelonPrefs.GetBool(Category, nameof(Enabled));
+            Strength = MelonPrefs.GetFloat(Category, nameof(Strength));
+            DoubleClickTime = MelonPrefs.GetFloat(Category, nameof(DoubleClickTime));
+        }
+
+        public override void OnModSettingsApplied() => ApplySettings();
 
         private VRCVrCameraOculus Camera;
         private bool isLeftPressed, isRightPressed = false;
@@ -37,14 +62,15 @@ namespace Playerspace_Mover
                 yield break;
             }
 
-            MelonLogger.LogError("VRCVrCameraOculus has not found, this mod only work in Oculus for now!");
+            MelonLogger.LogError("VRCVrCameraOculus not found, this mod only work in Oculus for now!");
             yield break;
         }
 
 
+
         public override void OnUpdate()
         {
-            if (Camera == null) return;
+            if (!Enabled || Camera == null) return;
 
             if (HasDoubleClicked(OVRInput.Button.Three, DoubleClickTime) || HasDoubleClicked(OVRInput.Button.One, DoubleClickTime))
             {
@@ -62,9 +88,8 @@ namespace Playerspace_Mover
 
             if (leftTrigger)
             {
-
                 Vector3 currentOffset = OVRInput.GetLocalControllerPosition(OVRInput.Controller.LTouch);
-                Vector3 calculatedOffset = (currentOffset - startingOffset) * -1.0f;
+                Vector3 calculatedOffset = (currentOffset - startingOffset) * -Strength;
                 startingOffset = currentOffset;
                 Camera.cameraLiftTransform.localPosition += calculatedOffset;
             }
@@ -72,13 +97,13 @@ namespace Playerspace_Mover
             if (rightTrigger)
             {
                 Vector3 currentOffset = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
-                Vector3 calculatedOffset = (currentOffset - startingOffset) * -1.0f;
+                Vector3 calculatedOffset = (currentOffset - startingOffset) * -Strength;
                 startingOffset = currentOffset;
                 Camera.cameraLiftTransform.localPosition += calculatedOffset;
             }
         }
 
-        private static Dictionary<OVRInput.Button, bool> PreviousStates = new Dictionary<OVRInput.Button, bool>()
+        private static readonly Dictionary<OVRInput.Button, bool> PreviousStates = new Dictionary<OVRInput.Button, bool>()
         {
             { OVRInput.Button.Three, false }, { OVRInput.Button.One, false }
         };
@@ -91,8 +116,7 @@ namespace Playerspace_Mover
             else return PreviousStates[key] = false;
         }
 
-        private readonly float DoubleClickTime = 0.25f;
-        private static Dictionary<OVRInput.Button, float> lastTime = new Dictionary<OVRInput.Button, float>();
+        private static readonly Dictionary<OVRInput.Button, float> lastTime = new Dictionary<OVRInput.Button, float>();
 
         // Thanks to Psychloor!
         // https://github.com/Psychloor/DoubleTapRunner/blob/master/DoubleTapSpeed/Utilities.cs#L30

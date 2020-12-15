@@ -10,6 +10,7 @@ A MelonLoader mod that replicate the SteamVR's Playspace for Oculus. Currently w
 - [ ] Create a way to customize the binds
 - [ ] Integration with UIX
 - [ ] Fix occassionaly resets/teleports
+- [ ] Add support to SteamVR
 
 ### Links
 [Preview](https://cdn.discordapp.com/attachments/783830959669116979/788117970844909578/space_move_oculus.mp4) | [Download](https://github.com/Rafacasari/Playerspace-Mover/releases/latest) | [Report Issue or Feature Request](https://github.com/Rafacasari/Playerspace-Mover/issues/new) | [How to install MelonLoader](https://melonwiki.xyz/#/README)

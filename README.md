@@ -1,7 +1,9 @@
-# How to use:
-Hold **X** or **A** in Touch Controllers and then move to climb/fly around.
+# Playerspace Mover [![Downloads](https://img.shields.io/github/downloads/Rafacasari/Playerspace-Mover/total?color=blue)](https://github.com/Rafacasari/Playerspace-Mover/releases/latest)
+A MelonLoader mod that replicate the SteamVR's Playerspace for Oculus. Currently working only in VRChat.
 
-Double Click the *same buttons* to reset your position.
+# How to use:
+- Hold **X** or **A** in Touch Controllers and move to climb on air.
+- Double Click the *same buttons* to reset your position.
 
 # To do:
 - [ ] Create a way to customize the binds
@@ -9,7 +11,7 @@ Double Click the *same buttons* to reset your position.
 - [ ] Fix occassionaly resets/teleports
 
 # Links
-[Preview](https://cdn.discordapp.com/attachments/783830959669116979/788117970844909578/space_move_oculus.mp4) | [Download](https://github.com/Rafacasari/Playerspace-Mover/releases/latest)
+[Preview](https://cdn.discordapp.com/attachments/783830959669116979/788117970844909578/space_move_oculus.mp4) | [Download](https://github.com/Rafacasari/Playerspace-Mover/releases/latest) | [Report Issue or Feature Request](https://github.com/Rafacasari/Playerspace-Mover/issues/new) | [How to install MelonLoader](https://melonwiki.xyz/#/README)
 
 # Credits
 - Psychloor [DoubleTapRunner](https://github.com/Psychloor/DoubleTapRunner/blob/master/DoubleTapSpeed/Utilities.cs#L30)

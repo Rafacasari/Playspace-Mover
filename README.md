@@ -1,4 +1,4 @@
-# Oculus Playerspace Mover [![Downloads](https://img.shields.io/github/downloads/Rafacasari/Playerspace-Mover/total?color=blue)](https://github.com/Rafacasari/Playerspace-Mover/releases/latest) [![Current Version](https://img.shields.io/github/v/release/rafacasari/Playerspace-Mover?color=gren&label=version)]() 
+# Playspace Mover [![Downloads](https://img.shields.io/github/downloads/Rafacasari/Playerspace-Mover/total?color=blue)](https://github.com/Rafacasari/Playerspace-Mover/releases/latest) [![Current Version](https://img.shields.io/github/v/release/rafacasari/Playerspace-Mover?color=gren&label=version)]() 
 
 A MelonLoader mod that replicate the SteamVR's Playspace for Oculus. Currently working only in VRChat.
 
@@ -8,7 +8,7 @@ A MelonLoader mod that replicate the SteamVR's Playspace for Oculus. Currently w
 
 ### To do:
 - [ ] Create a way to customize the binds
-- [ ] Integration with UIX
+- [X] Integration with UIX
 - [ ] Fix occassionaly resets/teleports
 - [ ] Add support to SteamVR
 

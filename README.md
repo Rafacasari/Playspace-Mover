@@ -1,7 +1,7 @@
-# Playspace Mover [![Downloads](https://img.shields.io/github/downloads/Rafacasari/Playerspace-Mover/total?color=blue)](https://github.com/Rafacasari/Playerspace-Mover/releases/latest) [![Current Version](https://img.shields.io/github/v/release/rafacasari/Playerspace-Mover?color=gren&label=version)]() 
-
+# Playspace Mover [![Downloads](https://img.shields.io/github/downloads/Rafacasari/Playerspace-Mover/total?color=blue)](https://github.com/Rafacasari/Playerspace-Mover/releases/latest) [![Current Version](https://img.shields.io/github/v/release/rafacasari/Playerspace-Mover?color=gren&label=version)]() [![PayPal](https://img.shields.io/static/v1?label=&message=Donate&color=white&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=EGA5V9WLQWHJS)
+**If you want to support me and encourage to create new mods, click on "Donate" button.** ❤  
 A MelonLoader mod that replicate the SteamVR's Playspace for Oculus. Currently working only in VRChat.
-
+ 
 ### How to use:
 - Hold **X** or **A** in Touch Controllers and move to climb on air.
 - Double Click the *same buttons* to reset your position.

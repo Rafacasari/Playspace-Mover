@@ -16,7 +16,7 @@ namespace PlayspaceMover
         public const string Description = "A SteamVR's Playspace clone for VRChat from Oculus Store";
         public const string Author = "Rafa";
         public const string Company = "RBX";
-        public const string Version = "1.1.1";
+        public const string Version = "1.1.2";
         public const string DownloadLink = null;
     }
 
@@ -34,13 +34,13 @@ namespace PlayspaceMover
         private readonly string Category = "PlayspaceMover";
         public override void OnApplicationStart()
         {
-            MelonPrefs.RegisterCategory(Category, "Oculus Playspace Mover");
-            MelonPrefs.RegisterBool(Category, nameof(Enabled), Enabled, "Enabled");
-            MelonPrefs.RegisterFloat(Category, nameof(Strength), Strength, "Strength");
-            MelonPrefs.RegisterFloat(Category, nameof(DoubleClickTime), DoubleClickTime, "Double Click Time");
-            MelonPrefs.RegisterBool(Category, nameof(DisableDoubleClick), DisableDoubleClick, "Disable Double Click");
-            MelonPrefs.RegisterBool(Category, nameof(DisableLeftHand), DisableLeftHand, "Disable Left Hand");
-            MelonPrefs.RegisterBool(Category, nameof(DisableRightHand), DisableRightHand, "Disable Right Hand");
+            MelonPreferences.CreateCategory(Category, "Oculus Playspace Mover");
+            MelonPreferences.CreateEntry(Category, nameof(Enabled), Enabled, "Enabled");
+            MelonPreferences.CreateEntry(Category, nameof(Strength), Strength, "Strength");
+            MelonPreferences.CreateEntry(Category, nameof(DoubleClickTime), DoubleClickTime, "Double Click Time");
+            MelonPreferences.CreateEntry(Category, nameof(DisableDoubleClick), DisableDoubleClick, "Disable Double Click");
+            MelonPreferences.CreateEntry(Category, nameof(DisableLeftHand), DisableLeftHand, "Disable Left Hand");
+            MelonPreferences.CreateEntry(Category, nameof(DisableRightHand), DisableRightHand, "Disable Right Hand");
 
             ApplySettings();
 
@@ -69,17 +69,18 @@ namespace PlayspaceMover
 
         private void ApplySettings()
         {
-            Enabled = MelonPrefs.GetBool(Category, nameof(Enabled));
-            Strength = MelonPrefs.GetFloat(Category, nameof(Strength));
-            DoubleClickTime = MelonPrefs.GetFloat(Category, nameof(DoubleClickTime));
-            DisableDoubleClick = MelonPrefs.GetBool(Category, nameof(DisableDoubleClick));
-            DisableLeftHand = MelonPrefs.GetBool(Category, nameof(DisableLeftHand));
-            DisableRightHand = MelonPrefs.GetBool(Category, nameof(DisableRightHand));
+            Enabled = MelonPreferences.GetEntryValue<bool>(Category, nameof(Enabled));
+            Strength = MelonPreferences.GetEntryValue<float>(Category, nameof(Strength));
+            DoubleClickTime = MelonPreferences.GetEntryValue<float>(Category, nameof(DoubleClickTime));
+            DisableDoubleClick = MelonPreferences.GetEntryValue<bool>(Category, nameof(DisableDoubleClick));
+            DisableLeftHand = MelonPreferences.GetEntryValue<bool>(Category, nameof(DisableLeftHand));
+            DisableRightHand = MelonPreferences.GetEntryValue<bool>(Category, nameof(DisableRightHand));
         }
 
-        public override void OnModSettingsApplied() => ApplySettings();
+        //public override void OnModSettingsApplied() => ApplySettings();
+        public override void OnPreferencesSaved() => ApplySettings();
 
-        private VRCVrCameraOculus Camera;
+        private MonoBehaviour1PublicTrUnique Camera;
         private bool isLeftPressed, isRightPressed = false;
         private Vector3 startingOffset;
         private Vector3 StartPosition;
@@ -87,15 +88,15 @@ namespace PlayspaceMover
         private IEnumerator WaitInitialization()
         {
             while (VRCUiManager.prop_VRCUiManager_0 == null) yield return new WaitForFixedUpdate();
-            var objects = UnityEngine.Object.FindObjectsOfType<VRCVrCameraOculus>();
+            var objects = UnityEngine.Object.FindObjectsOfType<MonoBehaviour1PublicTrUnique>();
             if (objects != null && objects.Length > 0)
             {
                 Camera = objects[0];
-                StartPosition = Camera.cameraLiftTransform.localPosition;
+                StartPosition = Camera.field_Public_Transform_0.localPosition;
                 yield break;
             }
 
-            MelonLogger.LogError("VRCVrCameraOculus not found, this mod only work in Oculus for now!");
+            MelonLogger.Error("VRCVrCameraOculus not found, this mod only work in Oculus for now!");
             yield break;
         }
 
@@ -105,7 +106,7 @@ namespace PlayspaceMover
 
             if (!DisableDoubleClick && (HasDoubleClicked(OVRInput.Button.Three, DoubleClickTime) || HasDoubleClicked(OVRInput.Button.One, DoubleClickTime)))
             {
-                Camera.cameraLiftTransform.localPosition = StartPosition;
+                Camera.field_Public_Transform_0.localPosition = StartPosition;
                 return;
             }
 
@@ -122,7 +123,7 @@ namespace PlayspaceMover
                 Vector3 currentOffset = OVRInput.GetLocalControllerPosition(OVRInput.Controller.LTouch);
                 Vector3 calculatedOffset = (currentOffset - startingOffset) * -Strength;
                 startingOffset = currentOffset;
-                Camera.cameraLiftTransform.localPosition += calculatedOffset;
+                Camera.field_Public_Transform_0.localPosition += calculatedOffset;
             }
 
             if (rightTrigger && !DisableRightHand)
@@ -130,7 +131,7 @@ namespace PlayspaceMover
                 Vector3 currentOffset = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
                 Vector3 calculatedOffset = (currentOffset - startingOffset) * -Strength;
                 startingOffset = currentOffset;
-                Camera.cameraLiftTransform.localPosition += calculatedOffset;
+                Camera.field_Public_Transform_0.localPosition += calculatedOffset;
             }
         }
 

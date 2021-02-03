@@ -37,8 +37,8 @@
     <Reference Include="Il2Cppmscorlib">
       <HintPath>..\..\..\Steam\steamapps\common\VRChat\MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
     </Reference>
-    <Reference Include="MelonLoader.ModHandler">
-      <HintPath>..\..\..\Steam\steamapps\common\VRChat\MelonLoader\MelonLoader.ModHandler.dll</HintPath>
+    <Reference Include="MelonLoader">
+      <HintPath>..\..\..\Steam\steamapps\common\VRChat\MelonLoader\MelonLoader.dll</HintPath>
     </Reference>
     <Reference Include="Oculus.Platform">
       <HintPath>..\..\..\Steam\steamapps\common\VRChat\MelonLoader\Managed\Oculus.Platform.dll</HintPath>

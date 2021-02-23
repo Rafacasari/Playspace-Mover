@@ -2,9 +2,6 @@
 using MelonLoader;
 using System.Collections;
 using System.Collections.Generic;
-//using System.Linq;
-//using System;
-//using UIExpansionKit.API;
 using UnityEngine;
 #endregion
 
@@ -77,10 +74,9 @@ namespace PlayspaceMover
             DisableRightHand = MelonPreferences.GetEntryValue<bool>(Category, nameof(DisableRightHand));
         }
 
-        //public override void OnModSettingsApplied() => ApplySettings();
         public override void OnPreferencesSaved() => ApplySettings();
-
-        private MonoBehaviour1PublicTrUnique Camera;
+        
+        private OVRCameraRig Camera;
         private bool isLeftPressed, isRightPressed = false;
         private Vector3 startingOffset;
         private Vector3 StartPosition;
@@ -88,15 +84,16 @@ namespace PlayspaceMover
         private IEnumerator WaitInitialization()
         {
             while (VRCUiManager.prop_VRCUiManager_0 == null) yield return new WaitForFixedUpdate();
-            var objects = UnityEngine.Object.FindObjectsOfType<MonoBehaviour1PublicTrUnique>();
+            
+            var objects = Object.FindObjectsOfType(UnhollowerRuntimeLib.Il2CppType.Of<OVRCameraRig>());
             if (objects != null && objects.Length > 0)
             {
-                Camera = objects[0];
-                StartPosition = Camera.field_Public_Transform_0.localPosition;
+                Camera = objects[0].TryCast<OVRCameraRig>();
+                StartPosition = Camera.trackingSpace.localPosition;
                 yield break;
             }
 
-            MelonLogger.Error("VRCVrCameraOculus not found, this mod only work in Oculus for now!");
+            MelonLogger.Error("OVRCameraRig not found, this mod only work in Oculus for now!");
             yield break;
         }
 
@@ -106,7 +103,7 @@ namespace PlayspaceMover
 
             if (!DisableDoubleClick && (HasDoubleClicked(OVRInput.Button.Three, DoubleClickTime) || HasDoubleClicked(OVRInput.Button.One, DoubleClickTime)))
             {
-                Camera.field_Public_Transform_0.localPosition = StartPosition;
+                Camera.trackingSpace.localPosition = StartPosition;
                 return;
             }
 
@@ -123,7 +120,7 @@ namespace PlayspaceMover
                 Vector3 currentOffset = OVRInput.GetLocalControllerPosition(OVRInput.Controller.LTouch);
                 Vector3 calculatedOffset = (currentOffset - startingOffset) * -Strength;
                 startingOffset = currentOffset;
-                Camera.field_Public_Transform_0.localPosition += calculatedOffset;
+                Camera.trackingSpace.localPosition += calculatedOffset;
             }
 
             if (rightTrigger && !DisableRightHand)
@@ -131,7 +128,7 @@ namespace PlayspaceMover
                 Vector3 currentOffset = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
                 Vector3 calculatedOffset = (currentOffset - startingOffset) * -Strength;
                 startingOffset = currentOffset;
-                Camera.field_Public_Transform_0.localPosition += calculatedOffset;
+                Camera.trackingSpace.localPosition += calculatedOffset;
             }
         }
 

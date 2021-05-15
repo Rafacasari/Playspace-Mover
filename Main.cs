@@ -1,4 +1,4 @@
-﻿#region Usings
+﻿#region
 using MelonLoader;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,26 +9,26 @@ namespace PlayspaceMover
 {
     public static class ModInfo
     {
-        public const string Name = "OculusPlayspaceMover";
-        public const string Description = "A SteamVR's Playspace clone for VRChat from Oculus Store";
-        public const string Author = "Rafa";
-        public const string Company = "RBX";
-        public const string Version = "1.1.2";
-        public const string DownloadLink = null;
+        public static readonly string Name = "OculusPlayspaceMover";
+        public static readonly string Description = "A SteamVR's Playspace clone for VRChat from Oculus Store";
+        public static readonly string Author = "Rafa";
+        public static readonly string Company = "RBX";
+        public static readonly string Version = "1.1.3";
+        public static readonly string DownloadLink = null;
     }
 
     public class Main : MelonMod
     {
         #region Settings
+        private readonly string Category = "PlayspaceMover";
         private bool Enabled = true;
         private float Strength = 1f;
         private float DoubleClickTime = 0.25f;
-        private bool DisableDoubleClick = false;
-        private bool DisableLeftHand = false;
-        private bool DisableRightHand = false;
+        private bool DisableDoubleClick;
+        private bool DisableLeftHand;
+        private bool DisableRightHand;
         #endregion
-
-        private readonly string Category = "PlayspaceMover";
+        
         public override void OnApplicationStart()
         {
             MelonPreferences.CreateCategory(Category, "Oculus Playspace Mover");
@@ -42,26 +42,6 @@ namespace PlayspaceMover
             ApplySettings();
 
             MelonCoroutines.Start(WaitInitialization());
-            
-            //if (MelonHandler.Mods.Any(x => x.Info.Name == "UI Expansion Kit"))
-            //{
-            //    BindManager.Initialize();
-
-            //    var playspaceSettings = ExpansionKitApi.CreateCustomFullMenuPopup(LayoutDescription.WideSlimList);
-            //    playspaceSettings.AddSimpleButton("Left Hand", new Action(() => BindManager.Show("Left Hand Spacedrag", new Action<KeyCode>(key =>
-            //        {
-
-            //        }), null)
-            //    ));
-
-            //    playspaceSettings.AddSimpleButton("Right Hand", new Action(() => 
-            //        BindManager.Show("Right Hand Spacedrag", new Action<KeyCode>(key => {
-
-            //        }), null)
-            //    ));
-
-            //    ExpansionKitApi.GetExpandedMenu(ExpandedMenu.SettingsMenu).AddSimpleButton("Oculus Playspace", new Action(() => playspaceSettings.Show()));
-            //} 
         }
 
         private void ApplySettings()
@@ -77,13 +57,18 @@ namespace PlayspaceMover
         public override void OnPreferencesSaved() => ApplySettings();
         
         private OVRCameraRig Camera;
-        private bool isLeftPressed, isRightPressed = false;
+        //private bool isLeftPressed, isRightPressed = false;
+        private OVRInput.Controller LastPressed; 
         private Vector3 startingOffset;
         private Vector3 StartPosition;
 
         private IEnumerator WaitInitialization()
         {
-            while (VRCUiManager.prop_VRCUiManager_0 == null) yield return new WaitForFixedUpdate();
+            // Wait for the VRCUiManager
+            while (VRCUiManager.prop_VRCUiManager_0 == null)
+            {
+                yield return new WaitForFixedUpdate();
+            }
             
             var objects = Object.FindObjectsOfType(UnhollowerRuntimeLib.Il2CppType.Of<OVRCameraRig>());
             if (objects != null && objects.Length > 0)
@@ -94,12 +79,14 @@ namespace PlayspaceMover
             }
 
             MelonLogger.Error("OVRCameraRig not found, this mod only work in Oculus for now!");
-            yield break;
         }
 
         public override void OnUpdate()
         {
-            if (!Enabled || Camera == null) return;
+            if (!Enabled || Camera == null)
+            {
+                return;
+            }
 
             if (!DisableDoubleClick && (HasDoubleClicked(OVRInput.Button.Three, DoubleClickTime) || HasDoubleClicked(OVRInput.Button.One, DoubleClickTime)))
             {
@@ -107,15 +94,27 @@ namespace PlayspaceMover
                 return;
             }
 
-            isLeftPressed = IsKeyJustPressed(OVRInput.Button.Three);
-            isRightPressed = IsKeyJustPressed(OVRInput.Button.One);
+            bool isLeftPressed = IsKeyJustPressed(OVRInput.Button.Three);
+            bool isRightPressed = IsKeyJustPressed(OVRInput.Button.One);
 
-            if (isLeftPressed || isRightPressed) startingOffset = OVRInput.GetLocalControllerPosition(isLeftPressed ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch);
+            if (isLeftPressed || isRightPressed)
+            {
+                startingOffset = OVRInput.GetLocalControllerPosition(isLeftPressed ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch);
+
+                if (isLeftPressed)
+                {
+                    LastPressed = OVRInput.Controller.LTouch;
+                }
+                else if (isRightPressed)
+                {
+                    LastPressed = OVRInput.Controller.RTouch;
+                }
+            }
 
             bool leftTrigger = OVRInput.Get(OVRInput.Button.Three, OVRInput.Controller.Touch);
             bool rightTrigger = OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.Touch);
 
-            if (leftTrigger && !DisableLeftHand)
+            if (leftTrigger && LastPressed == OVRInput.Controller.LTouch && !DisableLeftHand)
             {
                 Vector3 currentOffset = OVRInput.GetLocalControllerPosition(OVRInput.Controller.LTouch);
                 Vector3 calculatedOffset = (currentOffset - startingOffset) * -Strength;
@@ -123,7 +122,7 @@ namespace PlayspaceMover
                 Camera.trackingSpace.localPosition += calculatedOffset;
             }
 
-            if (rightTrigger && !DisableRightHand)
+            if (rightTrigger && LastPressed == OVRInput.Controller.RTouch && !DisableRightHand)
             {
                 Vector3 currentOffset = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
                 Vector3 calculatedOffset = (currentOffset - startingOffset) * -Strength;
@@ -139,10 +138,12 @@ namespace PlayspaceMover
 
         private static bool IsKeyJustPressed(OVRInput.Button key)
         {
-            if (!PreviousStates.ContainsKey(key)) PreviousStates.Add(key, false);
+            if (!PreviousStates.ContainsKey(key))
+            {
+                PreviousStates.Add(key, false);
+            }
 
-            if (OVRInput.Get(key, OVRInput.Controller.Touch) && !PreviousStates[key]) return PreviousStates[key] = true;
-            else return PreviousStates[key] = false;
+            return PreviousStates[key] = OVRInput.Get(key, OVRInput.Controller.Touch) && !PreviousStates[key];
         }
 
         private static readonly Dictionary<OVRInput.Button, float> lastTime = new Dictionary<OVRInput.Button, float>();
@@ -151,8 +152,15 @@ namespace PlayspaceMover
         // https://github.com/Psychloor/DoubleTapRunner/blob/master/DoubleTapSpeed/Utilities.cs#L30
         public static bool HasDoubleClicked(OVRInput.Button keyCode, float threshold)
         {
-            if (!OVRInput.GetDown(keyCode, OVRInput.Controller.Touch)) return false;
-            if (!lastTime.ContainsKey(keyCode)) lastTime.Add(keyCode, Time.time);
+            if (!OVRInput.GetDown(keyCode, OVRInput.Controller.Touch))
+            {
+                return false;
+            }
+
+            if (!lastTime.ContainsKey(keyCode))
+            {
+                lastTime.Add(keyCode, Time.time);
+            }
 
             if (Time.time - lastTime[keyCode] <= threshold)
             {

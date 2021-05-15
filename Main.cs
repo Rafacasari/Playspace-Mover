@@ -9,12 +9,12 @@ namespace PlayspaceMover
 {
     public static class ModInfo
     {
-        public static readonly string Name = "OculusPlayspaceMover";
-        public static readonly string Description = "A SteamVR's Playspace clone for VRChat from Oculus Store";
-        public static readonly string Author = "Rafa";
-        public static readonly string Company = "RBX";
-        public static readonly string Version = "1.1.3";
-        public static readonly string DownloadLink = null;
+        public const string Name = "OculusPlayspaceMover";
+        public const string Description = "A SteamVR's Playspace clone for VRChat from Oculus Store";
+        public const string Author = "Rafa";
+        public const string Company = "RBX";
+        public const string Version = "1.1.4";
+        public const string DownloadLink = "https://github.com/Rafacasari/Playerspace-Mover/releases/latest/download/PlayspaceMover.dll";
     }
 
     public class Main : MelonMod
@@ -57,7 +57,6 @@ namespace PlayspaceMover
         public override void OnPreferencesSaved() => ApplySettings();
         
         private OVRCameraRig Camera;
-        //private bool isLeftPressed, isRightPressed = false;
         private OVRInput.Controller LastPressed; 
         private Vector3 startingOffset;
         private Vector3 StartPosition;
@@ -131,7 +130,7 @@ namespace PlayspaceMover
             }
         }
 
-        private static readonly Dictionary<OVRInput.Button, bool> PreviousStates = new Dictionary<OVRInput.Button, bool>()
+        private static readonly Dictionary<OVRInput.Button, bool> PreviousStates = new Dictionary<OVRInput.Button, bool>
         {
             { OVRInput.Button.Three, false }, { OVRInput.Button.One, false }
         };

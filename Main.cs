@@ -13,7 +13,7 @@ namespace PlayspaceMover
         public const string Description = "A SteamVR's Playspace clone for VRChat from Oculus Store";
         public const string Author = "Rafa";
         public const string Company = "RBX";
-        public const string Version = "1.1.4";
+        public const string Version = "1.2.0";
         public const string DownloadLink = "https://github.com/Rafacasari/Playerspace-Mover/releases/latest/download/PlayspaceMover.dll";
     }
 
@@ -77,7 +77,7 @@ namespace PlayspaceMover
                 yield break;
             }
 
-            MelonLogger.Error("OVRCameraRig not found, this mod only work in Oculus for now!");
+            MelonLogger.Error("OVRCameraRig not found, this mod only work on Oculus! If u are using SteamVR, use the OVR Advanced Settings!");
         }
 
         public override void OnUpdate()
